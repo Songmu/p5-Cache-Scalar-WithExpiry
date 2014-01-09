@@ -20,16 +20,12 @@ sub new {
 
 sub get {
     my ($self) = @_;
-    if (defined $self->[TIME]) { # data with expiration
-        if ($self->[TIME] > Time::HiRes::time()) {
-            return $self->[VALUE];
-        } else {
-            undef $self->[VALUE]; # remove expired data
-            return undef;
-        }
-    } else {
-        return $self->[VALUE];
+
+    if (defined $self->[TIME] && $self->[TIME] <= Time::HiRes::time()) {
+        undef $self->[VALUE];
+        undef $self->[TIME];
     }
+    wantarray ? ($self->[VALUE], $self->[TIME]) : $self->[VALUE];
 }
 
 sub get_or_set {
@@ -46,7 +42,7 @@ sub get_or_set {
 
 sub set {
     my ($self, $val, $expiry) = @_;
-    Carp::croak('expiry time is required') if !$expiry || $expiry <= 0;
+    Carp::croak 'expiry time is required' if !$expiry || $expiry <= 0;
 
     $self->[TIME]  = $expiry;
     $self->[VALUE] = $val;
