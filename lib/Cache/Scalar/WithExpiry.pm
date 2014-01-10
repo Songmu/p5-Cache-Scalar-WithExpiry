@@ -8,9 +8,13 @@ our $VERSION = "0.01";
 use Carp ();
 use Time::HiRes;
 
+use parent 'Exporter';
+our @EXPORT = qw/cache_with_expiry/;
+
 use constant {
     TIME  => 0,
     VALUE => 1,
+    _KEY  => 2,
 };
 
 sub new {
@@ -60,6 +64,29 @@ sub delete :method {
     my ($self) = @_;
     undef $self->[VALUE];
     return undef;
+}
+
+{
+    my %_obj;
+    sub cache_with_expiry(&) {
+        my $code = shift;
+        my $obj = $_obj{$code+0} ||= do {
+            my $o = __PACKAGE__->new;
+            $o->_addr($code+0);
+            $o;
+        };
+        $obj->get_or_set($code);
+    }
+    sub _addr {
+        my ($self, $addr) = @_;
+        $self->[_KEY] = $addr;
+    }
+    sub DESTROY {
+        my $self = shift;
+        if (my $key = $self->[_KEY]) {
+            delete $_obj{$key};
+        }
+    }
 }
 
 1;
