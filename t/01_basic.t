@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More;
+use Test::More 0.98;
 use Test::Time time => 1;
 use Cache::Scalar::WithExpiry;
 use Time::HiRes qw//;

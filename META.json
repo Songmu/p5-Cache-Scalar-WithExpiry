@@ -1,5 +1,5 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "Cache one scalar value with expiry",
    "author" : [
       "Songmu <y.songmu@gmail.com>"
    ],
@@ -43,15 +43,29 @@
       },
       "runtime" : {
          "requires" : {
-            "perl" : "5.008005"
+            "Time::HiRes" : "0",
+            "parent" : "0",
+            "perl" : "5.008001"
          }
       },
       "test" : {
          "requires" : {
-            "Test::More" : "0.98"
+            "Test::More" : "0.98",
+            "Test::Time" : "0"
          }
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/Songmu/Cache-Scalar-WithExpiry/issues"
+      },
+      "homepage" : "https://github.com/Songmu/Cache-Scalar-WithExpiry",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/Songmu/Cache-Scalar-WithExpiry.git",
+         "web" : "https://github.com/Songmu/Cache-Scalar-WithExpiry"
+      }
+   },
    "version" : "0.01"
 }

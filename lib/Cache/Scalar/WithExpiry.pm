@@ -96,7 +96,7 @@ __END__
 
 =head1 NAME
 
-Cache::Scalar::WithExpiry - Cache one scalar value
+Cache::Scalar::WithExpiry - Cache one scalar value with expiry
 
 =head1 SYNOPSIS
 
@@ -151,11 +151,17 @@ until the expiry epoch.
 
 Delete the cache.
 
+=back
+
 =head1 EXPORT FUNCTION
+
+=over 4
 
 =item C<< my $stuff, [$expiry_epoch:Num] = cache_with_expiry {BLOCK}; >>
 
 [EXPERIMENTAL] It is equivalent process with doing C<new> and C<set_or_get> at a time.
+
+=back
 
 =head1 THANKS TO
 
