@@ -130,7 +130,7 @@ Create a new instance.
 
 Get a stuff from cache storage by C<< $key >>
 
-=item C<< $obj->set($val, $expiration_epoch) >>
+=item C<< $obj->set($val, $expiry_epoch) >>
 
 Set a stuff for cache. C<$expiry_epoch> is required.
 
