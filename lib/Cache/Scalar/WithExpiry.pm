@@ -14,7 +14,6 @@ our @EXPORT = qw/cache_with_expiry/;
 use constant {
     TIME  => 0,
     VALUE => 1,
-    _ADDR => 2,
 };
 
 sub new {
@@ -70,22 +69,8 @@ sub delete :method {
     my %_obj;
     sub cache_with_expiry(&) {
         my $code = shift;
-        my $obj = $_obj{$code+0} ||= do {
-            my $o = __PACKAGE__->new;
-            $o->_addr($code+0);
-            $o;
-        };
+        my $obj = $_obj{$code+0} ||= __PACKAGE__->new;
         $obj->get_or_set($code);
-    }
-    sub _addr {
-        my ($self, $addr) = @_;
-        $self->[_ADDR] = $addr;
-    }
-    sub DESTROY {
-        my $self = shift;
-        if (my $addr = $self->[_ADDR]) {
-            delete $_obj{$addr};
-        }
     }
 }
 
