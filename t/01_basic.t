@@ -15,10 +15,11 @@ use Time::HiRes qw//;
 subtest 'get/set' => sub {
     my $cache = Cache::Scalar::WithExpiry->new();
     is($cache->get(), undef);
-    eval {
-        $cache->set('abc');
-    };
-    like $@, qr/expiry time is required/;
+
+    open my $fh, '>', \my $stderr;
+    local *STDERR = $fh;
+    $cache->set('abc');
+    like $stderr, qr/Expiry time is required/;
 };
 
 subtest 'get/set expiration' => sub {
@@ -59,12 +60,11 @@ subtest 'get_or_set' => sub {
 
 subtest 'get_or_set' => sub {
     my $cache = Cache::Scalar::WithExpiry->new();
-    eval {
-        $cache->get_or_set(sub {
-            1;
-        });
-    };
-    like $@, qr/expiry time is required/;
+
+    open my $fh, '>', \my $stderr;
+    local *STDERR = $fh;
+    $cache->get_or_set(sub {1});
+    like $stderr, qr/Expiry time is required/;
 };
 
 done_testing;

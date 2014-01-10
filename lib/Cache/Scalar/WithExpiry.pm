@@ -31,22 +31,29 @@ sub get {
 sub get_or_set {
     my ($self, $code) = @_;
 
-    if (my $val = $self->get) {
-        return $val;
-    } else {
+    if (defined $self->get) {
+        return wantarray ? ($self->[VALUE], $self->[TIME]) : $self->[VALUE];
+    }
+    else {
         my ($val, $expiry) = $code->();
-        $self->set($val, $expiry);
-        return $val;
+        return $self->set($val, $expiry);
     }
 }
 
 sub set {
     my ($self, $val, $expiry) = @_;
-    Carp::croak 'expiry time is required' if !$expiry || $expiry <= 0;
 
-    $self->[TIME]  = $expiry;
-    $self->[VALUE] = $val;
-    return $val;
+    if (!$expiry || $expiry <= 0) {
+        Carp::carp 'Expiry time is required. Value is not to be cached.';
+        undef $expiry;
+        undef $self->[VALUE];
+        undef $self->[TIME];
+    }
+    else {
+        $self->[TIME]  = $expiry;
+        $self->[VALUE] = $val;
+    }
+    wantarray ? ($val, $expiry) : $val;
 }
 
 sub delete :method {
