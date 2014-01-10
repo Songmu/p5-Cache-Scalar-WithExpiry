@@ -14,7 +14,7 @@ our @EXPORT = qw/cache_with_expiry/;
 use constant {
     TIME  => 0,
     VALUE => 1,
-    _KEY  => 2,
+    _ADDR => 2,
 };
 
 sub new {
@@ -79,12 +79,12 @@ sub delete :method {
     }
     sub _addr {
         my ($self, $addr) = @_;
-        $self->[_KEY] = $addr;
+        $self->[_ADDR] = $addr;
     }
     sub DESTROY {
         my $self = shift;
-        if (my $key = $self->[_KEY]) {
-            delete $_obj{$key};
+        if (my $addr = $self->[_ADDR]) {
+            delete $_obj{$addr};
         }
     }
 }
@@ -103,16 +103,22 @@ Cache::Scalar::WithExpiry - Cache one scalar value
     use Cache::Scalar::WithExpiry;
     use feature qw/state/;
     
-    sub get_stuff {
-        my ($class, $key) = @_;
+    state $cache = Cache::Scalar::WithExpiry->new();
+    my ($value, $expiry_epoch) = $cache->get_or_set(sub {
+        my $val          = Storage->get;
+        my $expiry_epoch = time + 20;
+        return ($val, $expiry_epoch); # cache in 20 seconds
+    });
+
+DSL interface
+
+    use Cache::Scalar::WithExpiry;
     
-        state $cache = Cache::Scalar::WithExpiry->new();
-        my $value = $cache->get_or_set(sub {
-            my $val          = Storage->get;
-            my $expiry_epoch = time + 20;
-            return ($val, $expiry_epoch); # cache in 20 seconds
-        });
-    }
+    my ($value, $expiry_epoch) = cache_with_expiry {
+        my $val          = Storage->get;
+        my $expiry_epoch = time + 20;
+        return ($val, $expiry_epoch); # cache in 20 seconds
+    };
 
 =head1 DESCRIPTION
 
@@ -126,9 +132,10 @@ Cache::Scalar::WithExpiry is cache storage for one scalar value with expiry epoc
 
 Create a new instance.
 
-=item C<< my $stuff = $obj->get($key); >>
+=item C<< my $stuff, [$expiry_epoch:Num] = $obj->get(); >>
 
-Get a stuff from cache storage by C<< $key >>
+Get a stuff from cache storage. It returns value in scalar context, and returns
+value and expiry epoch in array context.
 
 =item C<< $obj->set($val, $expiry_epoch) >>
 
@@ -143,6 +150,12 @@ until the expiry epoch.
 =item C<< $obj->delete($key) >>
 
 Delete the cache.
+
+=head1 EXPORT FUNCTION
+
+=item C<< my $stuff, [$expiry_epoch:Num] = cache_with_expiry {BLOCK}; >>
+
+[EXPERIMENTAL] It is equivalent process with doing C<new> and C<set_or_get> at a time.
 
 =head1 THANKS TO
 
