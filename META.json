@@ -58,13 +58,13 @@
    "release_status" : "unstable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/Songmu/Cache-Scalar-WithExpiry/issues"
+         "web" : "https://github.com/Songmu/p5-Cache-Scalar-WithExpiry/issues"
       },
-      "homepage" : "https://github.com/Songmu/Cache-Scalar-WithExpiry",
+      "homepage" : "https://github.com/Songmu/p5-Cache-Scalar-WithExpiry",
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/Songmu/Cache-Scalar-WithExpiry.git",
-         "web" : "https://github.com/Songmu/Cache-Scalar-WithExpiry"
+         "url" : "git://github.com/Songmu/p5-Cache-Scalar-WithExpiry.git",
+         "web" : "https://github.com/Songmu/p5-Cache-Scalar-WithExpiry"
       }
    },
    "version" : "0.01"
